@@ -21,7 +21,7 @@ final class SignupWebServiceTests: XCTestCase {
         let sut = SignupWebService(urlString: "https://bit.ly/signup-mock-service-users")
         let expectation = self.expectation(description: "Sign up response")
         // Act
-        let form = SignupFormRequestModel(firstName: "Owais", lastName: "Q", email: "owais@email.com", password: "Owais-123")
+        let form = SignupFormRequestModel(firstName: "Owais", lastName: "Quadri", email: "owais@email.com", password: "Owais-123")
         sut.register(with: form) { (response,error) in
             // Assert
             XCTAssertEqual(response?.status, 200 )
