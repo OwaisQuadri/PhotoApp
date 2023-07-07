@@ -27,7 +27,7 @@ class SignupWebService {
             if let data = data, let responseModel = try? JSONDecoder().decode(SignupResponseModel.self, from: data) {
                 completion(responseModel, nil)
             } else {
-                    // TODO: write unit test and handle err
+                completion(nil, SignupError.invalidJSON)
             }
         }.resume()
         
