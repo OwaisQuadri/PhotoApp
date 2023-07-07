@@ -54,4 +54,22 @@ final class SignupWebServiceTests: XCTestCase {
         }
         self.wait(for: [expectation], timeout: 5)
     }
+    func testSignupWebService_InvalidURLConversion_ReturnErr() {
+        // Arrange
+        let urlSessionConfig = URLSessionConfiguration.ephemeral // doesnt use persistent storage / caching
+        urlSessionConfig.protocolClasses = [MockURLProtocol.self]
+        let urlSession = URLSession(configuration: urlSessionConfig)
+        sut = SignupWebService(urlString: "", urlSession: urlSession)
+        let jsonString = #"{"stats" : 200 }"#
+        MockURLProtocol.stubResponseData = jsonString.data(using: .utf8) // static stub
+        let expectation = self.expectation(description: "Sign up with an invalid URL String in response will give error")
+        // Act
+        sut.register(with: form) { (response,err) in
+            // Assert
+            XCTAssertNil(response, "the response should be nil, and error should exist" )
+            XCTAssertEqual(err, SignupError.invalidURLString, "error should be \".invalidURLString\"")
+            expectation.fulfill()
+        }
+        self.wait(for: [expectation], timeout: 5)
+    }
 }

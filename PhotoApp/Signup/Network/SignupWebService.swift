@@ -15,7 +15,10 @@ class SignupWebService {
         self.urlSession = urlSession
     }
     func register(with form: SignupFormRequestModel, completion: @escaping (SignupResponseModel?, SignupError?) -> Void) {
-        guard let url = url else { return } // TODO: create unit test for invalid URL and throw an error
+        guard let url = url else {
+            completion(nil, SignupError.invalidURLString)
+            return
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
