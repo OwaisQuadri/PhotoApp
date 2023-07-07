@@ -26,13 +26,19 @@ class SignupWebService {
         request.httpBody = try? JSONEncoder().encode(form)
         
         urlSession.dataTask(with: request) { (data, response, err) in
-            // TODO: write unit test and handle err
-            if let data = data, let responseModel = try? JSONDecoder().decode(SignupResponseModel.self, from: data) {
-                completion(responseModel, nil)
+            if let _ = err {
+                completion(nil, SignupError.failedRequest(desc: Localized.failedRequestErrorDescription))
+                return
+            }
+            if let data = data, let response = try? JSONDecoder().decode(SignupResponseModel.self, from: data) {
+                completion(response, nil)
             } else {
                 completion(nil, SignupError.invalidJSON)
             }
         }.resume()
         
     }
+}
+class Localized {
+    static let failedRequestErrorDescription = NSLocalizedString("SignupError_failedRequest_description", value: "error description for SignupError.failedRequest", comment: "error description for SignupError.failedRequest")
 }
