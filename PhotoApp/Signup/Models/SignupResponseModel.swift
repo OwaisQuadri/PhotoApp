@@ -6,7 +6,9 @@
 //
 
 import Foundation
-
+enum ResponseStatus: Int {
+    case success = 200
+}
 struct SignupResponseModel: Codable {
     let status: Int
 }

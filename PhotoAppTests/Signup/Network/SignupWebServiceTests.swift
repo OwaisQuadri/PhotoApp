@@ -18,13 +18,20 @@ final class SignupWebServiceTests: XCTestCase {
     }
     func testSignupWebService_GivenSuccessResponse_ReturnSuccess() {
         // Arrange
-        let sut = SignupWebService(urlString: "https://bit.ly/signup-mock-service-users")
+        let config = URLSessionConfiguration.ephemeral // doesnt use persistent storage / caching
+        config.protocolClasses = [MockURLProtocol.self]
+        
+        let jsonString = #"{"status" : 200 }"#
+        MockURLProtocol.stubResponseData = jsonString.data(using: .utf8) // static stub
+        
+        let urlSession = URLSession(configuration: config)
+        let sut = SignupWebService(urlString: "https://bit.ly/signup-mock-service-users", urlSession: urlSession)
         let expectation = self.expectation(description: "Sign up response")
         // Act
         let form = SignupFormRequestModel(firstName: "Owais", lastName: "Quadri", email: "owais@email.com", password: "Owais-123")
         sut.register(with: form) { (response,error) in
             // Assert
-            XCTAssertEqual(response?.status, 200 )
+            XCTAssertEqual(response?.status, ResponseStatus.success.rawValue )
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: 5)
