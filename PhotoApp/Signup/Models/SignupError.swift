@@ -8,5 +8,5 @@
 import Foundation
 
 enum SignupError: Error {
-    
+    case invalidJSON
 }
